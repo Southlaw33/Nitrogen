@@ -7,10 +7,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//customers table
 model Customers {
-  id   Int @id @default(autoincrement())
-  name String
-  email String @unique
-  phoneNumber String @unique
-  address String 
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String   @unique
+  phoneNumber String   @unique
+  address     String
+  Orders      Orders[]
 }
+
+//Restaurants table
+model Restaurants {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  location  String
+  MenuItems MenuItems[]
+  Orders    Orders[]
+}
+
+//Menu Items table
+model MenuItems {
+  id          Int         @id @default(autoincrement())
+  restaurant  Restaurants @relation(fields: [retaurantId], references: [id], onDelete: Cascade)
+  retaurantId Int
+  name        String
+  price       Decimal
+  isAvailable Boolean     @default(true)
+}
+
+//Orders table
+model Orders {
+  id           Int         @id @default(autoincrement())
+  customerId   Int
+  CustomerId   Customers   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  RestaurantId Int
+  RestId       Restaurants @relation(fields: [RestaurantId], references: [id], onDelete: Cascade)
+  totalPrice   Decimal
+  orderTime    DateTime    @default(now())
+  status       Status
+}
+
+//enum for status codes
+enum Status {
+  Placed
+  Preparing
+  Completed
+  Cancelled
+}
+
+//
