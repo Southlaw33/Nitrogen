@@ -34,6 +34,7 @@ model MenuItems {
   name        String
   price       Decimal
   isAvailable Boolean     @default(true)
+  OrderItem   OrderItem[]
 }
 
 //Orders table
@@ -46,6 +47,7 @@ model Orders {
   totalPrice   Decimal
   orderTime    DateTime    @default(now())
   status       Status
+  OrderItem    OrderItem[]
 }
 
 //enum for status codes
@@ -56,4 +58,12 @@ enum Status {
   Cancelled
 }
 
-//
+//orderItems table
+model OrderItem {
+  id         Int       @id @default(autoincrement())
+  orderId    Int
+  menuItemId Int
+  quantity   Int
+  order      Orders    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem   MenuItems @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+}
