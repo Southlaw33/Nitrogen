@@ -32,7 +32,7 @@ model MenuItems {
   restaurant  Restaurants @relation(fields: [retaurantId], references: [id], onDelete: Cascade)
   retaurantId Int
   name        String
-  price       Decimal
+  price       Float
   isAvailable Boolean     @default(true)
   OrderItem   OrderItem[]
 }
